@@ -7,9 +7,7 @@
       "headings": {
         "about-us": "About Us",
         "project-team": "Project team",
-        "john-doe": "John Doe",
-        "jane-doe": "Jane Doe",
-        "johnny-doe": "Johnny Doe",
+        "goh-ler-xuan": "Goh Ler Xuan",
         "nicholas-tng": "Nicholas Tng",
         "ong-zhen-dong": "Ong Zhen Dong"
       },
@@ -161,7 +159,7 @@
     },
     {
       "src": "team/lerxuann.md",
-      "title": "John Doe's Project Portfolio Page",
+      "title": "Goh Ler Xuan's Project Portfolio Page",
       "headings": {
         "project-addressbook-level-3": "Project: AddressBook Level 3"
       },
