@@ -21,9 +21,10 @@ public class GroupRemarkCommand extends Command {
             + "by the name of the group. "
             + "Existing remark will be overwritten by the input.\n"
             + "Parameters: "
-            + PREFIX_GROUPTAG + "GROUPNAME (must be a string) "
+            + PREFIX_GROUPTAG + "GROUPNAME "
             + PREFIX_GROUPREMARK + "REMARK\n"
-            + "Example: " + COMMAND_WORD + "  "
+            + "Example: " + COMMAND_WORD + " "
+            + PREFIX_GROUPTAG + "CS2103T "
             + PREFIX_GROUPREMARK + "Finals on 30 Nov";
 
     public static final String MESSAGE_SUCCESS = "Added remark to group %1$s: %2$s";

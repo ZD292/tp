@@ -9,6 +9,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.group.Group;
 import seedu.address.model.group.GroupList;
+import seedu.address.model.group.exceptions.GroupNotFoundException;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -182,6 +183,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     public Group getGroup(String groupName) throws CommandException {
         // group list get that group object with same name
         return groups.getGroup(groupName);
+    }
+
+    public Group getGroup(Group group) throws CommandException {
+        // group list get that group object with same name
+        return groups.getGroup(group.getGroupName());
     }
 
 

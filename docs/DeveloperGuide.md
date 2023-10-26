@@ -12,7 +12,7 @@
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well }_
+This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -156,6 +156,76 @@ Classes used by multiple components are in the `seedu.addressbook.commons` packa
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Delete feature
+
+#### Implementation
+
+The proposed delete person/group mechanism is facilitated by `AddressBook`. It implements the following operations:
+
+* `AddressBook#removePerson(Person p)` — Removes Person p from the address book.
+* `AddressBook#removeGroup(Group g)` — Remove Group g from the address book.
+
+These operations are exposed in the `Model` interface as `Model#deletePerson()`, `Model#deleteGroup()` respectively.
+
+##### Delete Person
+
+Given below is an example usage scenario and how the Delete Person mechanism behaves at each step.
+
+Step 1. The user executes `delete n/Alex Yeoh` command to delete a person named 'Alex Yeoh' in the address book. After parsing, a new `DeletePersonCommand` object will be returned.
+
+Step 2. `DeletePersonCommand` is executed, in which `Model#deletePerson()` is called, removing the Person with name 'Alex Yeoh' from the address book while returning the `Person` object.
+
+<box type="info" seamless>
+
+**Note:** If no such person named 'Alex Yeoh' exists, a `CommandException` will be thrown.
+
+</box>
+
+Step 3. `Person#getGroups()` is called to obtain a `GroupList` of groups the target person is part of.
+
+Step 4. The `GroupList` is converted into a stream, where each element is a `Group`. `Group#removePerson()` is called for each Group in the stream, removing the target Person from all `ObserverableList<Person> listOfGroupMates` in `Group`.
+
+The following sequence diagram shows how the Delete Person operation works:
+
+<puml src="diagrams/DeletePersonSequenceDiagram.puml" alt="DeletePersonSequence" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `DeletePersonCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+
+</box>
+
+##### Delete Group
+
+Given below is an example usage scenario and how the Delete Group mechanism behaves at each step.
+
+Step 1. The user executes `delete g/CS2100` command to delete a group named 'CS2100' in the address book. After parsing, a new `DeleteGroupCommand` object will be returned.
+
+Step 2. `DeleteGroupCommand` is executed, in which `Model#deleteGroup()` is called, removing the `Group` with name 'CS2100' (the target group) from the address book while returning the `Group` object.
+
+<box type="info" seamless>
+
+**Note:** If no such group named 'CS2100' exists, a `CommandException` will be thrown.
+
+</box>
+
+Step 3. `Group#getListOfGroupMates()` is called to obtain a `ObservableList<Person>` of Persons that are a part of the target group.
+
+Step 4. The `ObservableList<Person>` is converted into a stream, where each element is a `Person`. `Person#removeGroup()` is called for each Person in the stream, removing the target Group from all `GroupList groups` in `Person`.
+
+Step 5. `DeleteGroupCommand` creates a new `CommandResult` with the corresponding message, and returns the result to the `LogicManager`.
+
+The following sequence diagram shows how the Delete Group operation works:
+
+<puml src="diagrams/DeleteGroupSequenceDiagram.puml" alt="DeleteGroupSequence" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `DeleteGroupCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+
+</box>
+
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
@@ -245,9 +315,123 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 _{more aspects and alternatives to be added}_
 
+### Proposed Group Remark Feature
+
+#### Proposed Implementation
+
+The proposed group remark feature is facilitated by the `Group` class. It includes a `Group Remark` field and implements the `Group#setGroupRemark()` operation. This feature is exposed in the `Model` interface as `Model#addGroupRemark()`.
+
+Here's an example usage scenario and how the group remark mechanism behaves at each step:
+
+**Step 1.** The user creates a group called `CS2103T`. The `Group` is initialized with an empty `groupRemark`.
+
+**Step 2.** The user executes the `remark g/CS2103T r/Quiz tomorrow` command to add the remark "Quiz tomorrow" to the `CS2103T` group. The `GroupRemarkCommandParser` extracts the group and remark from the input and creates a `GroupRemarkCommand`, which calls `Model#addGroupRemark(groupName, groupRemark)`. The model retrieves the existing `CS2103T` group from the database and calls the group's `Group#setRemark(groupRemark)`, adding the `groupRemark` to the group.
+
+**Note:** If the user wants to modify the group remark, they can execute the same command with the new remark. The existing remark will be deleted and overwritten, and the new remark is stored in the group.
+
+The following activity diagram summarizes what happens when a user executes a new command:
+
+<puml src="diagrams/GroupRemarkSequenceDiagram.puml" alt="GroupRemarkSequenceDiagram" />
+
+#### Design Considerations
+
+**Aspects:**
+
+- **Alternative 1 (current choice):** Overrides original remark
+    - Pros: Easy to implement.
+    - Cons: May be troublesome if the user wants to keep contents from the original remark.
+- **Alternative 2:** Edits original remark
+    - Pros: Easy to add more information.
+    - Cons: Could be confusing to edit if there are many changes.
+
+
 ### \[Proposed\] Data archiving
 
 _{Explain here how the data archiving feature will be implemented}_
+
+
+### Add Command Feature
+
+The add feature is facilitate by a number of classes such as `Person` and `Model` 
+
+Step 1. The user launches the application for the first time.
+
+Step 2. The user executes `“add n/John Doe p/98765432 e/johnd@example.com g/CS2103T”` command to add a new person. `LogicManager#execute` is called which then calls `AddressBookParser#parseCommand` to decide on the type of command. `AddressBookParse`r` then calls `AddCommandParser`,
+
+Step 3, The `AddCommandParser` is called to read the user input. `AddCommandParser` calls `ArgumentTokenizer#tokenize` to check the prefixes of the user input. `AddCommandParser` then calls `ArgumentMultimap#getValue()` to get inputs after each prefix.
+The result of it is then passed to `ParserUtil#parse{Attribute}` methods to parse each attributes such as `Name`. `AddCommandParser` then makes new person object. `AddCommandParser` then calls `AddCommand` and passes `Person` inside.
+
+Step.4 `AddCommand` then calls `Model#addPerson()` which then calls `AddressBook#addPerson()`. The latter method will add person inside the `uniquePersonList` in `addressBook`. `AddCommand` also calls `Model#addGroup` which then calls `AddressBook#addGroup` to add the group inside `grouplist` if the group does not exist.
+Lastly, `AddCommand` adds the person inside the group
+
+Note: No duplication is allowed in addressbook for most of Person’s attribute (name, email and phone number.)
+
+<puml src="diagrams/AddCommandSequenceDiagram.puml" alt="AddCommandSeqDiagram" />
+
+#### Design consideration:
+
+**Aspect: Handling group attribute in user input**
+
+* **Alternative 1 (Current Choice):** Only allow user to add one group for each `Add` Command
+  * Pros: Conveniently adds a person into group while creating a new contact at the same time
+  * Cons: User input is relatively longer
+* **Alternative 2:** Allow user to add as many groups as required for each `Add` Command
+  * Pros: Conveniently adds a person into group while creating a new contact at the same time
+  * Cons: User input can get potentially very long, increasing the chance of invalid input
+
+### [Proposed] Delete Time Feature
+
+#### Proposed Implementation
+
+The proposed delete time feature is facilitated by the `timeIntervalList` and `Person` class. It accesses the `timeIntervalList` from the `Person` class and deletes a time interval with `Person#deleteFreeTime()`. The operation is exposed in the `Model` interface as `Model#deleteTimeFromPerson`.
+
+Step 1. The user launches the application. The `AddressBook` will be initialized with the free time of its contacts.
+
+Step 2. The user executes the command `deleteTime n/Alex Yeoh t/mon 1200 - mon 1400 ;tue 1000 - wed 1600`. The `deleteTimeCommandParser` will be called to parse the inputs and call the `deletePersonTimeCommand`. The `deletePersonTime` command calls `Model#deleteTimeFromPerson()`, which will call `Person#deleteFreeTime()`.
+
+**Note:** Since multiple inputs are allowed, an array list of time intervals are passed around, each of which is to be deleted.
+
+Step 3. The function will be called in the person's `timeInterval` list. The application will loop through each time interval that is to be deleted and in the person's `timeInterval` list. Each time interval will be compared to see whether the `timeIntervalList` contains the time interval to be deleted. Afterwards, the new `timeInterval` list will be saved.
+
+**Note:** If a time interval is not in the person's list, that interval will be collated and printed to specifically notify the user which time intervals are not in the list. The other time intervals that are in the list will still be deleted.
+
+Similarly, the group command does the same, except for the `Group` class.
+
+The following activity diagram summarizes what happens when a user executes a new command:
+
+<puml src="diagrams/DeletePersonTimeDiagram.puml" alt="DeletePersonTimeDiagram"/>
+
+#### Design Considerations
+
+**Aspect: Error Messages**
+
+* Alternative 1 (current choice): Print specific error messages.
+  Pros: Allow users to understand which inputs went wrong.
+  Cons: May have performance issues in terms of runtime as more functions will be used to craft the error message. Currently, we utilized a `StringBuilder` to craft the message and did extra checks to see whether there had been any errors appended to the error message.
+
+* Alternative 2: Generalized error message.
+  Pros: Will be faster to implement.
+  Cons: User might be unsure why the function went wrong.
+
+**Aspect: How to Handle Multiple Time Inputs**
+
+* Alternative 1 (current choice): Parse each time input one by one and execute the commands.
+  Pros: More user-friendly and efficient as users can delete more time intervals at once.
+  Cons: More expensive as more functions will be called to parse the inputs.
+
+* Alternative 2: Allow only single input.
+  Pros: Faster as fewer functions are called.
+  Cons: Not as user-friendly since users will have to delete time intervals one by one.
+
+**Aspect: How to Handle Errors in Time Intervals**
+
+* Alternative 1 (current choice): Delete the time intervals that are correct and return the intervals that are wrong.
+  Pros: Better user experience as users need not rewrite intervals that were right.
+  Cons: Increased memory usage to store the errors.
+
+* Alternative 2: Do not carry out the delete at all.
+  Pros: More time and memory efficient.
+  Cons: Not as user-friendly since users will have to delete time intervals that were originally correct, wasting their time.
 
 
 --------------------------------------------------------------------------------------------------------------------

@@ -39,8 +39,6 @@ public class FindGroupCommand extends FindCommand {
         model.updateFilteredPersonList(inGroupPred);
 
         //Display group remark
-
-
         return new CommandResult(
                 java.lang.String.format(MESSAGE_GROUP_FOUND,
                         groupToFind.getGroupName(), groupToFind.getGroupRemark()));

@@ -16,5 +16,7 @@ public class CliSyntax {
     public static final Prefix PREFIX_ENDINTERVAL = new Prefix(";");
     public static final Prefix PREFIX_TOFRO = new Prefix("-");
     public static final Prefix PREFIX_GROUPREMARK = new Prefix("r/");
+    public static final Prefix PREFIX_DURATION = new Prefix("d/");
+
 
 }

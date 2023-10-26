@@ -22,6 +22,8 @@ public class GroupPersonCommand extends Command {
         "the address book.\n" + "Parameters: " + PREFIX_NAME + "NAME " + PREFIX_GROUPTAG + "GROUP ";
 
     public static final String MESSAGE_SUCCESS = "%1$s is now a part of %2$s";
+    public static final String MESSAGE_DUPLICATE_PERSON_IN_GROUP =
+        "Error, invalid input entered, unable to put the person into group";
 
     private final String personName;
     private final String groupName;
@@ -44,24 +46,10 @@ public class GroupPersonCommand extends Command {
         Person person = output.getKey();
         Group group = output.getValue();
 
-//		if (personList.isEmpty()) {
-//			throw new PersonNotFoundException();
-//		}
-//		if (groupList.isEmpty()) {
-//			throw new GroupNotFoundException();
-//		}
-//		if (personList.size() != 1) {
-//			throw new CommandException("There is more than one person matching name specified, be more specific");
-//		}
-//		if (groupList.size() != 1) {
-//			throw new CommandException("There is more than one group matching name specified, be more specific");
-//		}
-//		Person person = personList.get(0);
-//		Group group = groupList.get(0);
         // person already in the group
         System.out.println(person.toString());
 
-        return new CommandResult(java.lang.String.format(MESSAGE_SUCCESS, person.getName().fullName, group.getGroupName()));
+        return new CommandResult(String.format(MESSAGE_SUCCESS, person.getName().fullName, group.getGroupName()));
 	}
 
     @Override

@@ -8,6 +8,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.Duration;
+import seedu.address.model.FreeTime;
 import seedu.address.model.TimeIntervalList;
 import seedu.address.model.TimeInterval;
 import seedu.address.model.person.Person;
@@ -30,7 +32,13 @@ public class Group {
     public Group(String groupName) {
         requireNonNull(groupName);
         this.groupName = groupName;
-        this.groupRemark = new GroupRemark(" ");
+        this.groupRemark = new GroupRemark("");
+    }
+
+    public Group(String groupName, GroupRemark groupRemark) {
+        requireNonNull(groupName);
+        this.groupName = groupName;
+        this.groupRemark = groupRemark;
     }
 
     /**
@@ -58,8 +66,16 @@ public class Group {
         return groupName;
     }
 
-    public ObservableList getGroupMates() {
+    public ObservableList<Person> getGroupMates() {
         return listOfGroupMates;
+    }
+    /**
+     * Converts the internal list to streams.
+     *
+     * @return Internal list into streams.
+     */
+    public Stream<Person> toStream() {
+        return this.listOfGroupMates.stream();
     }
 
     /**
@@ -67,12 +83,13 @@ public class Group {
      * This defines a weaker notion of equality between two groups.
      */
     public boolean isSameGroup(Group otherGroup) {
-        if (otherGroup == this) {
-            return true;
-        }
-
-        return otherGroup != null
-            && this.equals(otherGroup);
+        return this.equals(otherGroup);
+//        if (otherGroup == this) {
+//            return true;
+//        }
+//
+//        return otherGroup != null
+//            && this.equals(otherGroup);
     }
 
     /**
@@ -103,7 +120,7 @@ public class Group {
      */
     public void removePerson(Person toRemove) throws CommandException {
         requireNonNull(toRemove);
-        if (!contains(toRemove)) {
+        if (!this.listOfGroupMates.contains(toRemove)) {
             throw new CommandException(
                 String.format("%s is not in this group: %s", toRemove.getName().fullName, this.groupName));
         }
@@ -161,16 +178,70 @@ public class Group {
         return this.groupName.equals(otherGroup.getGroupName());
     }
 
-    public Stream<Person> grpMatesStream() {
-        return listOfGroupMates.stream();
-    }
-
+//    public Stream<Person> grpMatesStream() {
+//        return listOfGroupMates.stream();
+//    }
+//
     public GroupRemark getGroupRemark() {
         return this.groupRemark;
     }
 
     public void setGroupRemark(GroupRemark groupRemark) {
         this.groupRemark = groupRemark;
+    }
+
+    /**
+     * Modify StringBuilder to display message should any groupMate not input their free time
+     * @param br StringBuilder
+     * @param format Format specifier
+     */
+    public void areAllFree(StringBuilder br, String format) {
+        for (Person p: this.listOfGroupMates) {
+            if (p.isNotFree()) {
+                br.append(String.format(format, p.getName().fullName));
+            }
+        }
+    }
+
+    /**
+     * Compare each person in group to get overlap
+     * Accumulate the result
+     * @param duration represent duration in minutes
+     * @return TimeInterval that can fit duration specified
+     */
+    public TimeIntervalList findFreeTime(Duration duration) throws CommandException {
+        // compare person to person get overlap
+        // will use one getter for freeTime
+        TimeIntervalList freeTime = new TimeIntervalList();
+        // nobody in group
+        if (listOfGroupMates.isEmpty()) {
+            throw new CommandException("Group is empty");
+        }
+        // only 1 person in group
+        if (listOfGroupMates.size() == 1) {
+            Person person = listOfGroupMates.get(0);
+            TimeIntervalList personFreeTime = person.getTime();
+            // check whether fits duration or not
+            personFreeTime = personFreeTime.fitDuration(duration);
+            return personFreeTime;
+        }
+
+        for (int i = 0; i < listOfGroupMates.size(); i++) {
+           if (i + 1 == listOfGroupMates.size()) {
+               break;
+           }
+           Person firstPerson = listOfGroupMates.get(i);
+           Person secondPerson = listOfGroupMates.get(i + 1);
+           TimeIntervalList first = firstPerson.getTime();
+           TimeIntervalList second = secondPerson.getTime();
+           // uninitialised freeTime e.g. first and second person in group
+           if (freeTime.isEmpty()) {
+               freeTime = first.findOverlap(second, duration);
+           } else {
+               freeTime = freeTime.findOverlap(second, duration);
+           }
+        }
+        return freeTime;
     }
 
     public void addTime(ArrayList<TimeInterval> toAddTime) throws CommandException {

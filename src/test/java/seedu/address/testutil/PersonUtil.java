@@ -35,7 +35,7 @@ public class PersonUtil {
         sb.append(PREFIX_EMAIL + person.getEmail().value + " ");
         //sb.append(PREFIX_ADDRESS + person.getAddress().value + " ");
         person.getGroups().toStream().forEach(
-            s -> sb.append(PREFIX_GROUPTAG + s.getName() + " ")
+            s -> sb.append(PREFIX_GROUPTAG + s.getGroupName() + " ")
         );
         return sb.toString();
     }

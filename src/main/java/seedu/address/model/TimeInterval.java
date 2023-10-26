@@ -52,6 +52,73 @@ public class TimeInterval {
     }
 
     /**
+     * Check whether an interval overlaps another interval in any way
+     * Interval overlapping at start and end points not considered as overlap does not form interval
+     * @param t
+     * @return
+     */
+    public boolean isTimeIntervalOverlapWithTimeInterval(TimeInterval t) {
+        // interval1.start < interval2.end (if interval1.start = interval2.end, is not overlapping)
+        // and interval1.end > interval2.start
+        // ||
+        // interval1.end > interval2.start (interval1.start = interval2.end means not overlapping)
+        // and interval1.start < interval2.end
+
+        boolean firstCase = this.start.compareTo(t.end) < 0 && this.end.compareTo(t.start) > 0;
+        boolean secondCase = this.start.compareTo(t.end) > 0 && this.start.compareTo(t.end) < 0;
+        boolean overLap = firstCase || secondCase;
+        return overLap;
+    }
+
+
+    /**
+     * Check if Intervals are equal in terms of time representation and not exact object comparison
+     * @param otherInterval that we are comparing to
+     * @return boolean whether otherInterval is equal in terms of time representation
+     */
+    public boolean equalStartAndEnd(TimeInterval otherInterval) {
+        return this.start.compareTo(otherInterval.start) == 0 && this.end.compareTo(otherInterval.end) == 0;
+    }
+
+    public static TimeInterval getMaxStart(TimeInterval first, TimeInterval second) {
+        // if both have the same MaxStart then by default return first
+        return first.getStart().compareTo(second.getStart()) >= 0 ? first : second;
+    }
+
+    public static TimeInterval getMinEnd(TimeInterval first, TimeInterval second) {
+        // if both have the same MinEnd then by default return first
+        return first.getEnd().compareTo(second.getEnd()) <= 0 ? first : second;
+    }
+
+    /**
+     * Create new time interval with MaxStart and MinEnd
+     * @param otherInterval
+     * @return
+     */
+    public TimeInterval getIntersect(TimeInterval otherInterval) {
+        return new TimeInterval(this.getStart(), otherInterval.getEnd());
+    }
+
+    /**
+     * Check if time interval can accomodate for a given duration
+     * Whether duration can fit in interval
+     * @param duration of meeting in consideration
+     * @return boolean whether meeting is permissible
+     */
+    public boolean allows(Duration duration) {
+        int durationInMin = duration.getDurationInMin();
+        // assume start < end always hold, property of timeInterval
+        int durationStart = this.start.getDurationInMin();
+        int durationEnd = this.end.getDurationInMin();
+        boolean allows = durationEnd - durationStart >= durationInMin;
+        return allows;
+    }
+
+
+
+
+
+    /**
      * Returns true if the interval string is in right format.
      * @param timeInterval The timeInterval to be checked.
      * @return Returns true if the interval string is in right format.

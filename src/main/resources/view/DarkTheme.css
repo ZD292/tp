@@ -301,9 +301,8 @@
 
 #resultDisplay .content{
     -fx-background-color: #9B6572;
-    border-color: #B88491
+    border-color: #B88491;
     border-radius: 0;
-
 }
 
 
