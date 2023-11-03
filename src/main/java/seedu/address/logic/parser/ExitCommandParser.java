@@ -17,7 +17,7 @@ public class ExitCommandParser implements Parser<ExitCommand> {
      */
     @Override
     public ExitCommand parse(String args) throws ParseException {
-        if (args.length() != 0) {
+        if (args.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExitCommand.MESSAGE_USAGE));
         }
 

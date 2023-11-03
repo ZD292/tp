@@ -17,7 +17,7 @@ public class ListGroupCommandParser implements Parser<ListGroupCommand> {
      */
     @Override
     public ListGroupCommand parse(String args) throws ParseException {
-        if (args.length() != 0) {
+        if (args.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListGroupCommand.MESSAGE_USAGE));
         }
 

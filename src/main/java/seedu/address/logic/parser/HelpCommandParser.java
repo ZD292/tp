@@ -17,7 +17,7 @@ public class HelpCommandParser implements Parser<HelpCommand> {
      */
     @Override
     public HelpCommand parse(String args) throws ParseException {
-        if (args.length() != 0) {
+        if (args.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
         }
 

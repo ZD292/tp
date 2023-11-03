@@ -35,6 +35,9 @@ public class FindFreeTimeCommandParser implements Parser<FindFreeTimeCommand> {
 		if (!arePrefixesPresent(argMultimap, PREFIX_DURATION, PREFIX_GROUPTAG) || !argMultimap.getPreamble().isEmpty()) {
 			throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindFreeTimeCommand.MESSAGE_USAGE));
 		}
+
+		argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DURATION, PREFIX_GROUPTAG);
+
 		String groupName = argMultimap.getValue(PREFIX_GROUPTAG).get();
 		String durationName = argMultimap.getValue(PREFIX_DURATION).get();
 		int duration = 0;

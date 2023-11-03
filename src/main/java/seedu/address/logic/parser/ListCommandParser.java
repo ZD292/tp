@@ -17,7 +17,7 @@ public class ListCommandParser implements Parser<ListCommand>{
      */
     @Override
     public ListCommand parse(String args) throws ParseException {
-        if (args.length() != 0) {
+        if (args.isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         }
 
