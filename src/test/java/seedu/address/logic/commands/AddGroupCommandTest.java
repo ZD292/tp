@@ -195,7 +195,7 @@ public class AddGroupCommandTest {
         }
 
         @Override
-        public void addTimeToPerson(Name toAddPerson, ArrayList<TimeInterval> toAddFreeTime) throws CommandException {
+        public String addTimeToPerson(Name toAddPerson, ArrayList<TimeInterval> toAddFreeTime) throws CommandException {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -210,7 +210,7 @@ public class AddGroupCommandTest {
         }
 
         @Override
-        public void deleteTimeFromPerson(Name personName, ArrayList<TimeInterval> listOfTimesToDelete) {
+        public void deleteTimeFromPerson(Name personName, ArrayList<TimeInterval> listOfTimesToDelete) throws CommandException {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -220,7 +220,7 @@ public class AddGroupCommandTest {
         }
 
         @Override
-        public void addTimeToGroup(Group toAdd, ArrayList<TimeInterval> toAddTime) throws CommandException {
+        public String addTimeToGroup(Group toAdd, ArrayList<TimeInterval> toAddTime) throws CommandException {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -234,6 +234,15 @@ public class AddGroupCommandTest {
             throw new AssertionError("This method should not be called.");
         }
 
+        @Override
+        public boolean hasPhone(Person person) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean hasEmail(Person person) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**

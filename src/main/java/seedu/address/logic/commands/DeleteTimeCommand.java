@@ -17,13 +17,13 @@ public abstract class DeleteTimeCommand extends Command {
             + PREFIX_FREETIME + "FREE TIME \n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "Alex Yeoh "
-            + PREFIX_FREETIME + "mon 1200 - mon 1400 ;tue 1000 - wed 1600 \n"
+            + PREFIX_FREETIME + "mon 1200 - mon 1400 " + PREFIX_FREETIME  + "tue 1000 - wed 1600 \n"
             + "For group, parameters: "
             + PREFIX_GROUPTAG + "GROUPNAME "
             + PREFIX_FREETIME + "FREE TIME \n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_GROUPTAG + "CS2103T "
-            + PREFIX_FREETIME + "mon 1200 - mon 1400 ;tue 1000 - wed 1600";
+            + PREFIX_FREETIME + "mon 1200 - mon 1400 " + PREFIX_FREETIME  + "tue 1000 - wed 1600";
 
     @Override
     public abstract CommandResult execute(Model model) throws CommandException;

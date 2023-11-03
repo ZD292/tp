@@ -275,4 +275,8 @@ public class Group {
                 .add("Group name", groupName)
                 .toString();
     }
+
+    public int size() {
+        return listOfGroupMates.size();
+    }
 }

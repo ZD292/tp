@@ -25,7 +25,7 @@ public class AddTimeCommand extends Command {
         + PREFIX_FREETIME + "FREE_TIME \n"
         + "Example: " + COMMAND_WORD + " "
         + PREFIX_NAME + "Alex Yeoh "
-        + PREFIX_FREETIME + "mon 1200 - mon 1400" + PREFIX_FREETIME +"tue 1000 - wed 1600";
+        + PREFIX_FREETIME + "mon 1200 - mon 1400 " + PREFIX_FREETIME + "tue 1000 - wed 1600";
 
     public static final String MESSAGE_SUCCESS = "Free time status for: %1$s \n";
 

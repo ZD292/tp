@@ -45,7 +45,6 @@ public class UngroupPersonCommand extends Command {
         Pair<Person, Group> output = model.ungroupPerson(this.personName, this.groupName);
         Person person = output.getKey();
         Group group = output.getValue();
-        System.out.println(person.toString());
 
         return new CommandResult(String.format(MESSAGE_SUCCESS, person.getName().fullName, group.getGroupName()));
     }

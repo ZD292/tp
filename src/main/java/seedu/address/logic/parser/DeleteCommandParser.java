@@ -26,12 +26,7 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_GROUPTAG);
 
         //duplicate parameters
-        try {
-            argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_GROUPTAG);
-        } catch (ParseException e) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    DeleteCommand.MESSAGE_TWO_PARAMETERS));
-        }
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_GROUPTAG);
 
         // check if either n/ or g/ are present
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME)

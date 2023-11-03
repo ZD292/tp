@@ -68,7 +68,7 @@ public class Person {
     }
 
     public GroupList getGroups() {
-        return personGroups;
+        return this.personGroups;
     }
 
     /**

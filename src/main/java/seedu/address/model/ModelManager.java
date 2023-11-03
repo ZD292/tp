@@ -160,11 +160,7 @@ public class ModelManager implements Model {
     public Pair<Person, Group> ungroupPerson(String personName, String groupName) throws CommandException {
         Person person = addressBook.getPerson(personName);
         Group group = addressBook.getGroup(groupName);
-        person.removeGroup(group);
-        group.removePerson(person);
         this.unassignGroup(person, group);
-        //does not show
-//        System.out.println("hi");
         forceUpdateList();
         Pair<Person, Group> output = new Pair<>(person, group);
         return output;
