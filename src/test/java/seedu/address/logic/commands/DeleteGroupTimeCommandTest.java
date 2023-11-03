@@ -231,7 +231,7 @@ public class DeleteGroupTimeCommandTest {
         }
 
         @Override
-        public void deleteTimeFromPerson(Name personName, ArrayList<TimeInterval> listOfTimesToDelete) throws CommandException {
+        public String deleteTimeFromPerson(Name personName, ArrayList<TimeInterval> listOfTimesToDelete) throws CommandException {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -246,7 +246,7 @@ public class DeleteGroupTimeCommandTest {
         }
 
         @Override
-        public void deleteTimeFromGroup(Group group,
+        public String deleteTimeFromGroup(Group group,
                                         ArrayList<TimeInterval> toDeleteTime) throws CommandException {
             throw new AssertionError("This method should not be called.");
         }
@@ -288,12 +288,12 @@ public class DeleteGroupTimeCommandTest {
         }
 
         @Override
-        public void deleteTimeFromGroup(Group group,
+        public String deleteTimeFromGroup(Group group,
                                          ArrayList<TimeInterval> toDeleteTime) throws CommandException {
             requireNonNull(group);
             Group groupInModel = this.group;
             try {
-                groupInModel.deleteTime(toDeleteTime);
+                return groupInModel.deleteTime(toDeleteTime);
             } catch (CommandException e) {
                 throw new CommandException(e.getMessage());
             }
@@ -323,12 +323,12 @@ public class DeleteGroupTimeCommandTest {
         }
 
         @Override
-        public void deleteTimeFromGroup(Group group,
+        public String deleteTimeFromGroup(Group group,
                                         ArrayList<TimeInterval> toDeleteTime) throws CommandException {
             requireNonNull(group);
             Group groupInModel = this.group;
             try {
-                groupInModel.deleteTime(toDeleteTime);
+                return groupInModel.deleteTime(toDeleteTime);
             } catch (CommandException e) {
                 throw new CommandException(e.getMessage());
             }

@@ -103,7 +103,7 @@ public interface Model {
 
     String addTimeToPerson(Name toAddPerson, ArrayList<TimeInterval> toAddTime) throws CommandException;
     TimeIntervalList getTimeFromPerson(Name personName) throws CommandException;
-    void deleteTimeFromPerson(Name personName, ArrayList<TimeInterval> toDeleteTime) throws CommandException;
+    String deleteTimeFromPerson(Name personName, ArrayList<TimeInterval> toDeleteTime) throws CommandException;
 
     //=========== Group functions ============================================================================
 
@@ -133,7 +133,7 @@ public interface Model {
 
     String addTimeToGroup(Group toAdd, ArrayList<TimeInterval> toAddTime) throws CommandException;
 
-    void deleteTimeFromGroup(Group group, ArrayList<TimeInterval> toDeleteTime) throws CommandException;
+    String deleteTimeFromGroup(Group group, ArrayList<TimeInterval> toDeleteTime) throws CommandException;
 
     TimeIntervalList getTimeFromGroup(Group group) throws CommandException;
 

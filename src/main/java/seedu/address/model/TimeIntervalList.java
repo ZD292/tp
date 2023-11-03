@@ -29,26 +29,32 @@ public class TimeIntervalList implements Iterable<TimeInterval> {
     }
 
     public String addTime(ArrayList<TimeInterval> timeIntervals) throws CommandException{
-        boolean timeAdded = false;
+        boolean isPass = false;
+        boolean isFail = false;
         StringBuilder errorCompilation = new StringBuilder();
+        StringBuilder passMessage = new StringBuilder();
         errorCompilation.append("There is a clash in these input timings with your existing timing:\n");
         for (TimeInterval interval : timeIntervals) {
             if (isTimeIntervalOverlap(interval)) {
+                isFail = true;
                 errorCompilation.append(interval + "\n");
             } else {
-                if (!timeAdded) {
-                    errorCompilation.append("The other times have been added:\n");
+                if (!isPass) {
+                    passMessage.append("These times have been added:\n");
                 }
-                timeAdded = true;
+                isPass = true;
                 internalList.add(interval);
-                errorCompilation.append(interval.toString());
+                passMessage.append(interval.toString() + "\n");
             }
         }
 
-        if ((timeAdded && errorCompilation.length() > 67) || (!timeAdded && errorCompilation.length() > 35)) {
+        if (isFail && isPass) {
+            return errorCompilation.append(passMessage).toString();
+        } else if (isFail) {
             return errorCompilation.toString();
+        } else {
+            return passMessage.toString();
         }
-        throw new CommandException("Something went wrong at addtime in timeintervallist class");
     }
 
     public void addAll(TimeIntervalList timeIntervalList) {
@@ -57,23 +63,32 @@ public class TimeIntervalList implements Iterable<TimeInterval> {
         }
     }
 
-    public void deleteTime(ArrayList<TimeInterval> timeIntervals) throws CommandException {
-        boolean timeDeleted = false;
+    public String deleteTime(ArrayList<TimeInterval> timeIntervals) throws CommandException {
+        boolean isPass = false;
+        boolean isFail = false;
         StringBuilder errorCompilation = new StringBuilder();
+        StringBuilder passMessage = new StringBuilder();
         errorCompilation.append("These times are not in the list:\n");
-        for (TimeInterval time : timeIntervals) {
-            if (!internalList.contains(time)) {
-                errorCompilation.append(time + "\n");
+        for (TimeInterval interval : timeIntervals) {
+            if (!internalList.contains(interval)) {
+                isFail = true;
+                errorCompilation.append(interval + "\n");
             } else {
-                internalList.remove(time);
-                timeDeleted = true;
+                if (!isPass) {
+                    passMessage.append("These times have been added:\n");
+                }
+                isPass = true;
+                internalList.remove(interval);
+                passMessage.append(interval.toString() + "\n");
             }
         }
-        if (timeDeleted) {
-            errorCompilation.append("The other times have been deleted\n");
-        }
-        if ((timeDeleted && errorCompilation.length() > 87) || (!timeDeleted && errorCompilation.length() > 53)) {
-            throw new CommandException(errorCompilation.toString());
+
+        if (isFail && isPass) {
+            return errorCompilation.append(passMessage).toString();
+        } else if (isFail) {
+            return errorCompilation.toString();
+        } else {
+            return passMessage.toString();
         }
     }
 

@@ -252,7 +252,7 @@ public class Group {
         return this.timeIntervalList;
     }
 
-    public void deleteTime(ArrayList<TimeInterval> toDeleteTime) throws CommandException { this.timeIntervalList.deleteTime(toDeleteTime);}
+    public String deleteTime(ArrayList<TimeInterval> toDeleteTime) throws CommandException { return this.timeIntervalList.deleteTime(toDeleteTime);}
 
     @Override
     public boolean equals(Object group) {

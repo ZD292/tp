@@ -17,9 +17,9 @@ import seedu.address.model.person.Name;
 public class AddTimeCommandParser implements Parser<AddTimeCommand> {
 
     @Override
-    public AddTimeCommand parse(String userInput) throws ParseException {
+    public AddTimeCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(userInput, PREFIX_NAME, PREFIX_FREETIME);
+                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_FREETIME);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_FREETIME)
                 || !argMultimap.getPreamble().isEmpty()) {

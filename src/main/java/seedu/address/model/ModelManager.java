@@ -186,16 +186,17 @@ public class ModelManager implements Model {
      * @throws CommandException if time does not exist
      */
     @Override
-    public void deleteTimeFromPerson(Name personName,
+    public String deleteTimeFromPerson(Name personName,
                                      ArrayList<TimeInterval> toDeleteTime) throws CommandException {
         requireNonNull(personName);
         Person person = addressBook.getPerson(personName.fullName);
         try {
-            person.deleteFreeTime(toDeleteTime);
+            String status = person.deleteFreeTime(toDeleteTime);
+            forceUpdateList();
+            return status;
         } catch (CommandException e) {
             throw new CommandException(e.getMessage());
         }
-        forceUpdateList();
     }
 
     public TimeIntervalList getTimeFromPerson(Name personName) throws CommandException {
@@ -256,17 +257,18 @@ public class ModelManager implements Model {
      * @throws CommandException if time does not exist
      */
     @Override
-    public void deleteTimeFromGroup(Group group,
+    public String deleteTimeFromGroup(Group group,
                                     ArrayList<TimeInterval> toDeleteTime) throws CommandException {
         requireNonNull(group);
         Group groupToDeleteTime = addressBook.getGroup(group.getGroupName());
         try {
-            groupToDeleteTime.deleteTime(toDeleteTime);
+            String status = groupToDeleteTime.deleteTime(toDeleteTime);
+            forceUpdateList();
+            return status;
         } catch (CommandException e) {
             forceUpdateList();
             throw new CommandException(e.getMessage());
         }
-        forceUpdateList();
     }
 
     public Group addGroupRemark(String groupName, GroupRemark groupRemark) throws CommandException {
