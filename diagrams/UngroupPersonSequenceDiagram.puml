@@ -1,0 +1,79 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":UngroupPersonCommandParser" as UngroupPersonCommandParser LOGIC_COLOR
+participant ":UngroupPersonCommand" as UngroupPersonCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+
+[-> LogicManager : execute("ungroup n/personName g/groupName")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("ungroup n/personName g/groupName")
+activate AddressBookParser
+
+create UngroupPersonCommandParser
+AddressBookParser -> UngroupPersonCommandParser
+activate UngroupPersonCommandParser
+
+UngroupPersonCommandParser --> AddressBookParser
+deactivate UngroupPersonCommandParser
+
+AddressBookParser -> UngroupPersonCommandParser : parse("n/personName g/groupName")
+activate UngroupPersonCommandParser
+
+create UngroupPersonCommand
+UngroupPersonCommandParser -> UngroupPersonCommand
+activate UngroupPersonCommand
+
+UngroupPersonCommand --> UngroupPersonCommandParser : g
+deactivate UngroupPersonCommand
+
+UngroupPersonCommandParser --> AddressBookParser : g
+deactivate UngroupPersonCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+UngroupPersonCommandParser -[hidden]-> AddressBookParser
+destroy UngroupPersonCommandParser
+
+AddressBookParser --> LogicManager : g
+deactivate AddressBookParser
+
+LogicManager -> UngroupPersonCommand : execute()
+activate UngroupPersonCommand
+
+UngroupPersonCommand -> Model : ungroupPerson(personName, groupName)
+activate Model
+
+
+Model -> Model : ungroupPerson(personName, groupName)
+Model --> UngroupPersonCommand
+deactivate Model
+
+create CommandResult
+UngroupPersonCommand -> CommandResult
+activate CommandResult
+
+
+CommandResult --> UngroupPersonCommand
+deactivate CommandResult
+UngroupPersonCommand --> LogicManager
+
+deactivate UngroupPersonCommand
+
+UngroupPersonCommand -[hidden]-> AddressBookParser
+destroy UngroupPersonCommand
+
+[<--LogicManager
+deactivate LogicManager
+
+
+@enduml

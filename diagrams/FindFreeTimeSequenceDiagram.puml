@@ -1,0 +1,94 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":FindFreeTimeParser" as FindFreeTimeParser LOGIC_COLOR
+participant "a:FindFreeTimeCommand" as FindFreeTimeCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+participant ":AddressBook" as AddressBook MODEL_COLOR
+participant ":Group" as Group MODEL_COLOR
+end box
+
+[-> LogicManager : execute(findfreetime g/CS2100 d/60)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(findfreetime g/CS2100 d/60 ...)
+activate AddressBookParser
+
+create FindFreeTimeParser
+AddressBookParser -> FindFreeTimeParser
+activate FindFreeTimeParser
+
+FindFreeTimeParser --> AddressBookParser
+deactivate FindFreeTimeParser
+
+
+AddressBookParser -> FindFreeTimeParser: parse("n/personName g/groupName")
+activate FindFreeTimeParser
+
+create FindFreeTimeCommand
+FindFreeTimeParser -> FindFreeTimeCommand
+activate FindFreeTimeCommand
+
+FindFreeTimeCommand --> FindFreeTimeParser : f
+deactivate FindFreeTimeCommand
+
+FindFreeTimeParser --> AddressBookParser : f
+deactivate FindFreeTimeParser
+
+FindFreeTimeParser-[hidden]-> AddressBookParser
+destroy FindFreeTimeParser
+
+AddressBookParser -> LogicManager : f
+deactivate AddressBookParser
+
+
+LogicManager -> FindFreeTimeCommand : execute()
+activate FindFreeTimeCommand
+
+FindFreeTimeCommand -> Model : findGroup("CS2100")
+activate Model
+
+Model -> AddressBook : findGroup("CS2100")
+activate AddressBook
+
+AddressBook --> Model : g
+deactivate AddressBook
+
+Model -> Group : areallfree(...)
+activate Group
+Group --> Model
+deactivate Group
+
+Model -> Group :findfreetime(..)
+activate Group
+Group --> Model : TimeIntervalList t
+deactivate Group
+
+Model -> FindFreeTimeCommand : TimeIntervalList t
+deactivate Model
+
+create CommandResult
+FindFreeTimeCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> FindFreeTimeCommand
+deactivate CommandResult
+
+FindFreeTimeCommand --> LogicManager
+deactivate FindFreeTimeCommand
+
+FindFreeTimeCommand-[hidden]-> AddressBookParser
+destroy FindFreeTimeCommand
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml

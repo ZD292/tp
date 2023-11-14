@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:User wants to filter their contact list;
+:User runs the "find" command;
+if () then ([Invalid command format])
+:ProjectPro throws an error;
+else (["find g/GROUPNAME" or "find n/KEYWORDS"])
+:ProjectPRO checks if User is filtering by keywords in name or group;
+if () then (["find g/GROUPNAME"])
+:ProjectPRO checks if group exists;
+    if () then ([Group exists])
+    : ProjectPRO displays list of contacts
+    in specified group;
+    else([Else])
+    : ProjectPRO throws an error;
+    endif
+else(["find n/KEYWORDS"])
+: ProjectPRO displays list of contacts whose
+    name contains one of the KEYWORDS;
+endif
+endif
+stop
+
+@enduml

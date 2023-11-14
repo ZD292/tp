@@ -9,7 +9,7 @@ Class "<<interface>>\nLogic" as Logic
 Class LogicManager
 }
 
-package Model as ModelPackage {
+package ProjectPROModel as ModelPackage {
 Class "<<interface>>\nModel" as Model
 Class ModelManager
 }

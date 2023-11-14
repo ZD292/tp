@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Start FindFreeTime of Group 2103 for duration 60 minutes;
+:Check if duration is valid;
+if () then ([Duration valid])
+  :Check if group exists;
+  if () then ([Group exists])
+    :Check that all group members have free time slot;
+    if () then ([All Members have time slot keyed in])
+      :Find free time of members in Group 2103;
+      if () then ([Members common time slot allow 60 minutes])
+        :Add common timeslot to list;
+      else ([else])
+        :Don't add common timeslot to list;
+      endif
+    else ([else])
+      :ProjectPRO throws Error;
+    endif
+  else ([else])
+    :ProjectPRO throws Error;
+  endif
+else ([else])
+  :ProjectPRO throws Error;
+endif
+stop
+
+@enduml

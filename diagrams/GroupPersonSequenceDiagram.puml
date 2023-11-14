@@ -1,0 +1,84 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":GroupPersonCommandParser" as GroupPersonCommandParser LOGIC_COLOR
+participant ":GroupPersonCommand" as GroupPersonCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+participant ":AddressBook" as AddressBook MODEL_COLOR
+end box
+
+
+[-> LogicManager : execute("group n/personName g/groupName")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("group n/personName g/groupName")
+activate AddressBookParser
+
+create GroupPersonCommandParser
+AddressBookParser -> GroupPersonCommandParser
+activate GroupPersonCommandParser
+
+GroupPersonCommandParser --> AddressBookParser
+deactivate GroupPersonCommandParser
+
+AddressBookParser -> GroupPersonCommandParser : parse("n/personName g/groupName")
+activate GroupPersonCommandParser
+
+create GroupPersonCommand
+GroupPersonCommandParser -> GroupPersonCommand
+activate GroupPersonCommand
+
+GroupPersonCommand --> GroupPersonCommandParser : g
+deactivate GroupPersonCommand
+
+GroupPersonCommandParser --> AddressBookParser : g
+deactivate GroupPersonCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+GroupPersonCommandParser -[hidden]-> AddressBookParser
+destroy GroupPersonCommandParser
+
+AddressBookParser --> LogicManager : g
+deactivate AddressBookParser
+
+LogicManager -> GroupPersonCommand : execute()
+activate GroupPersonCommand
+
+GroupPersonCommand -> Model : groupPerson(personName, groupName)
+activate Model
+
+Model -> AddressBook : getPerson(personName)
+activate AddressBook
+AddressBook --> Model : p
+Model -> AddressBook : getGroup(groupName)
+AddressBook --> Model : g
+deactivate AddressBook
+Model -> Model : assignGroup(p, g)
+Model --> GroupPersonCommand
+deactivate Model
+
+create CommandResult
+GroupPersonCommand -> CommandResult
+activate CommandResult
+
+
+CommandResult --> GroupPersonCommand
+deactivate CommandResult
+
+GroupPersonCommand --> LogicManager
+
+deactivate GroupPersonCommand
+
+GroupPersonCommand -[hidden]-> AddressBookParser
+destroy GroupPersonCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

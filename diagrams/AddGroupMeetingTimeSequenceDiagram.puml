@@ -1,0 +1,74 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AddGroupMeetingTimeCommandParser" as AddGroupMeetingTimeCommandParser LOGIC_COLOR
+participant "a:AddGroupMeetingTimeCommand" as AddGroupMeetingTimeCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("addmeeting g/CS2103T")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("addmeeting g/CS2103T")
+activate AddressBookParser
+
+create AddGroupMeetingTimeCommandParser
+AddressBookParser -> AddGroupMeetingTimeCommandParser
+activate AddGroupMeetingTimeCommandParser
+
+AddGroupMeetingTimeCommandParser --> AddressBookParser
+deactivate AddGroupMeetingTimeCommandParser
+
+AddressBookParser -> AddGroupMeetingTimeCommandParser : parse("g/CS2103T")
+activate AddGroupMeetingTimeCommandParser
+
+Create AddGroupMeetingTimeCommand
+AddGroupMeetingTimeCommandParser -> AddGroupMeetingTimeCommand
+activate AddGroupMeetingTimeCommand
+
+AddGroupMeetingTimeCommand --> AddGroupMeetingTimeCommandParser : a
+deactivate AddGroupMeetingTimeCommand
+
+AddGroupMeetingTimeCommandParser --> AddressBookParser : a
+deactivate AddGroupMeetingTimeCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.'
+AddGroupMeetingTimeCommandParser -[hidden]-> AddressBookParser
+destroy AddGroupMeetingTimeCommandParser
+
+AddressBookParser --> LogicManager : a
+deactivate AddressBookParser
+
+LogicManager -> AddGroupMeetingTimeCommand : execute()
+activate AddGroupMeetingTimeCommand
+
+AddGroupMeetingTimeCommand -> Model : addTimeToGroup(args)
+activate Model
+
+Model --> AddGroupMeetingTimeCommand
+deactivate Model
+
+create CommandResult
+AddGroupMeetingTimeCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> AddGroupMeetingTimeCommand
+deactivate CommandResult
+
+AddGroupMeetingTimeCommand --> LogicManager : result
+deactivate AddGroupMeetingTimeCommand
+
+AddGroupMeetingTimeCommand-[hidden]-> AddressBookParser
+destroy AddGroupMeetingTimeCommand
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml

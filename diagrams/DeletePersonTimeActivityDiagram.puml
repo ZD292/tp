@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Start Delete Time from Person;
+:Check if one person specified;
+if () then ([One person specified])
+  :Check if person exists;
+  if () then ([Person exists])
+    :Check if time exists;
+    if () then ([Time exists])
+      :ProjectPRO deletes time from person;
+    else ([else])
+      :ProjectPRO throws Error;
+    endif
+  else ([else])
+    :ProjectPRO throws Error;
+  endif
+else ([else])
+  :ProjectPRO throws Error;
+endif
+
+stop
+
+@enduml

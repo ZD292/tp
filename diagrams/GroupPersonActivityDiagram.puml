@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Start Add Person to Group;
+:Check if person exists;
+if () then ([Person exists])
+  :Check if group exists;
+  if () then ([Group exists])
+    :Check if person is in group's list of members;
+    if () then ([Person is in group])
+      :Check if group is in person's list of groups;
+      if () then ([Group is in person])
+        :Add person to group;
+      else ([else])
+        :ProjectPRO throws Error;
+      endif
+    else ([else])
+      :ProjectPRO throws Error;
+    endif
+  else ([else])
+    :ProjectPRO throws Error;
+  endif
+else ([else])
+  :ProjectPRO throws Error;
+endif
+
+stop
+
+@enduml

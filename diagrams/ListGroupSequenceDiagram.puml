@@ -1,0 +1,75 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":ListGroupCommandParser" as ListGroupCommandParser LOGIC_COLOR
+participant "c:ListGroupCommand" as ListGroupCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+
+[-> LogicManager : execute("listgroup")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("listgroup")
+activate AddressBookParser
+
+create ListGroupCommandParser
+AddressBookParser -> ListGroupCommandParser
+activate ListGroupCommandParser
+
+ListGroupCommandParser --> AddressBookParser
+deactivate ListGroupCommandParser
+
+AddressBookParser -> ListGroupCommandParser : parse("listgroup")
+activate ListGroupCommandParser
+
+create ListGroupCommand
+ListGroupCommandParser -> ListGroupCommand
+activate ListGroupCommand
+
+ListGroupCommand --> ListGroupCommandParser : c
+deactivate ListGroupCommand
+
+ListGroupCommandParser --> AddressBookParser : c
+deactivate ListGroupCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+ListGroupCommandParser -[hidden]-> AddressBookParser
+destroy ListGroupCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> ListGroupCommand : execute()
+activate ListGroupCommand
+
+ListGroupCommand -> Model : getFilteredGroupList()
+activate Model
+
+Model --> ListGroupCommand
+deactivate Model
+
+create CommandResult
+ListGroupCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> ListGroupCommand
+deactivate CommandResult
+
+ListGroupCommand --> LogicManager : result
+deactivate ListGroupCommand
+
+ListGroupCommand -[hidden]->AddressBookParser
+destroy ListGroupCommand
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml

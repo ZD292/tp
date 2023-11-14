@@ -1,0 +1,73 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":FindCommandParser" as FindCommandParser LOGIC_COLOR
+participant "d:FindPersonCommand" as FindPersonCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("find n/Alex John")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("find n/Alex John")
+activate AddressBookParser
+
+create FindCommandParser
+AddressBookParser -> FindCommandParser
+activate FindCommandParser
+
+FindCommandParser --> AddressBookParser
+deactivate FindCommandParser
+
+AddressBookParser -> FindCommandParser : parse("n/Alex John")
+activate FindCommandParser
+
+create FindPersonCommand
+FindCommandParser -> FindPersonCommand
+activate FindPersonCommand
+
+FindPersonCommand --> FindCommandParser : d
+deactivate FindPersonCommand
+
+FindCommandParser --> AddressBookParser : d
+deactivate FindCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+FindCommandParser -[hidden]-> AddressBookParser
+destroy FindCommandParser
+
+AddressBookParser --> LogicManager : d
+deactivate AddressBookParser
+
+LogicManager -> FindPersonCommand : execute()
+activate FindPersonCommand
+
+FindPersonCommand -> Model : updateFilteredPersonList(CORRESPONDING_PREDICATE)
+activate Model
+
+Model --> FindPersonCommand
+deactivate Model
+
+create CommandResult
+FindPersonCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> FindPersonCommand
+deactivate CommandResult
+
+FindPersonCommand --> LogicManager : result
+deactivate FindPersonCommand
+
+FindPersonCommand -[hidden]-> AddressBookParser
+destroy FindPersonCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

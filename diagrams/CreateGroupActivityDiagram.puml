@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:User wants to create a new group;
+:User inputs "new g/GROUPNAME";
+:Check if one group specified;
+if () then ([else])
+:ProjectPRO throws an error;
+else ([One group specified])
+:Check if group exists;
+if () then ([Group does not exist])
+:ProjectPro creates new group;
+else([Else])
+:ProjectPRO throws an error;
+endif
+endif
+stop
+
+@enduml

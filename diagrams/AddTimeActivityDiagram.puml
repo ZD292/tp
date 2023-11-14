@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Start Add Time to Person;
+:Check if input times clash with each other;
+if () then ([No clashes])
+  :Check if person exists;
+  if () then ([Person exists])
+    :Check if input times clash with existing times;
+    if () then ([No clashes])
+      :ProjectPRO adds times to person;
+    else ([else])
+      :ProjectPRO throws error;
+    endif
+  else ([else])
+    :ProjectPRO throws error;
+  endif
+else ([else])
+  :ProjectPRO throws Error;
+endif
+
+stop
+
+@enduml

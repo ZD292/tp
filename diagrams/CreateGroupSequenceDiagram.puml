@@ -1,0 +1,73 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":CreateGroupCommandParser" as CreateGroupCommandParser LOGIC_COLOR
+participant ":CreateGroupCommand" as CreateGroupCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("new g/groupName")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("new g/groupName")
+activate AddressBookParser
+
+create CreateGroupCommandParser
+AddressBookParser -> CreateGroupCommandParser
+activate CreateGroupCommandParser
+
+CreateGroupCommandParser --> AddressBookParser
+deactivate CreateGroupCommandParser
+
+AddressBookParser -> CreateGroupCommandParser : parse("groupName")
+activate CreateGroupCommandParser
+
+create CreateGroupCommand
+CreateGroupCommandParser -> CreateGroupCommand
+activate CreateGroupCommand
+
+CreateGroupCommand --> CreateGroupCommandParser : g
+deactivate CreateGroupCommand
+
+CreateGroupCommandParser --> AddressBookParser : g
+deactivate CreateGroupCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+CreateGroupCommandParser -[hidden]-> AddressBookParser
+destroy CreateGroupCommandParser
+
+AddressBookParser --> LogicManager : g
+deactivate AddressBookParser
+
+LogicManager -> CreateGroupCommand : execute()
+activate CreateGroupCommand
+
+CreateGroupCommand -> Model : addGroup(groupName)
+activate Model
+
+Model --> CreateGroupCommand
+deactivate Model
+
+create CommandResult
+CreateGroupCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> CreateGroupCommand
+deactivate CommandResult
+
+CreateGroupCommand --> LogicManager : result
+deactivate CreateGroupCommand
+
+CreateGroupCommand -[hidden]-> AddressBookParser
+destroy CreateGroupCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

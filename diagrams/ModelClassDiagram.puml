@@ -14,12 +14,15 @@ Class UserPrefs
 
 Class UniquePersonList
 Class Person
-Class Address
 Class Email
+Class Group
 Class Name
 Class Phone
-Class Tag
-
+Class GroupList
+class TimeIntervalList
+class TimeInterval
+class Time
+class GroupRemark
 Class I #FFFFFF
 }
 
@@ -37,18 +40,33 @@ UserPrefs .up.|> ReadOnlyUserPrefs
 
 AddressBook *--> "1" UniquePersonList
 UniquePersonList --> "~* all" Person
+
+AddressBook *--> "1" GroupList
+GroupList --> "*" Group
+
 Person *--> Name
 Person *--> Phone
+Person *--> "1" GroupList
 Person *--> Email
-Person *--> Address
-Person *--> "*" Tag
+Person *--> "1" TimeIntervalList
+
+Group *--> TimeIntervalList
+Group -->"*" Person
+Group *--> GroupRemark
+
+TimeIntervalList --> "*" TimeInterval
+TimeInterval *--> Time
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
 
 Name -[hidden]right-> Phone
-Phone -[hidden]right-> Address
-Address -[hidden]right-> Email
+Phone -[hidden]right-> Email
+
+
 
 ModelManager --> "~* filtered" Person
+ModelManager --> "~* filtered" Group
+
+
 @enduml

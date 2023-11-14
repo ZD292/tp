@@ -1,0 +1,6 @@
+<div class="box {{ include.type }} rounded">
+    <p class="box-title">{{ include.title }}</p>
+    {% if include.body %}
+    <p>{{ include.body | markdownify }}</p>
+    {% endif %}
+</div>

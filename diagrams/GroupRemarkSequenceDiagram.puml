@@ -1,0 +1,87 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":GroupRemarkCommandParser" as GroupRemarkCommandParser LOGIC_COLOR
+participant ":GroupRemarkCommand" as GroupRemarkCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+
+[-> LogicManager: execute("remark g/CS2103T r/Quiz tomorrow")
+activate LogicManager
+
+LogicManager -> AddressBookParser: parseCommand "remark g/CS2103T r/Quiz tomorrow"
+activate AddressBookParser
+
+create GroupRemarkCommandParser
+AddressBookParser -> GroupRemarkCommandParser
+activate GroupRemarkCommandParser
+
+GroupRemarkCommandParser --> AddressBookParser
+deactivate GroupRemarkCommandParser
+
+AddressBookParser -> GroupRemarkCommandParser: parse g/CS2103T r/Quiz tomorrow
+activate GroupRemarkCommandParser
+
+create GroupRemarkCommand
+GroupRemarkCommandParser -> GroupRemarkCommand
+activate GroupRemarkCommand
+
+GroupRemarkCommand --> GroupRemarkCommandParser: r
+deactivate GroupRemarkCommand
+
+GroupRemarkCommandParser --> AddressBookParser: r
+deactivate GroupRemarkCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+GroupRemarkCommandParser -[hidden]-> AddressBookParser
+destroy GroupRemarkCommandParser
+
+AddressBookParser --> LogicManager: r
+deactivate AddressBookParser
+
+LogicManager -> GroupRemarkCommand: execute()
+activate GroupRemarkCommand
+
+GroupRemarkCommand -> Model: addGroupRemark(groupName, groupRemark)
+activate Model
+
+'Model -> AddressBook: getGroup(groupName)
+'activate AddressBook
+'
+'AddressBook --> Model: g
+'deactivate AddressBook
+
+'Model -> Group: setGroupRemark(groupRemark)
+'activate Group
+'deactivate Group
+
+Model --> GroupRemarkCommand: g
+deactivate Model
+
+create CommandResult
+GroupRemarkCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> GroupRemarkCommand
+deactivate CommandResult
+
+
+
+GroupRemarkCommand --> LogicManager: result
+deactivate GroupRemarkCommand
+
+GroupRemarkCommand -[hidden]-> AddressBookParser
+destroy GroupRemarkCommand
+
+[<-- LogicManager
+deactivate LogicManager
+
+@enduml

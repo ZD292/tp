@@ -1,0 +1,75 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":ListTimeCommandParser" as ListTimeCommandParser LOGIC_COLOR
+participant ":ListTimePersonCommand" as ListTimePersonCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+
+[-> LogicManager: execute("listtime n/Alex Yeoh")
+activate LogicManager
+
+LogicManager -> AddressBookParser: parseCommand "listtime n/Alex Yeoh"
+activate AddressBookParser
+
+create ListTimeCommandParser
+AddressBookParser -> ListTimeCommandParser
+activate ListTimeCommandParser
+
+ListTimeCommandParser --> AddressBookParser
+deactivate ListTimeCommandParser
+
+AddressBookParser -> ListTimeCommandParser: parse n/Alex Yeoh
+activate ListTimeCommandParser
+
+create ListTimePersonCommand
+ListTimeCommandParser -> ListTimePersonCommand
+activate ListTimePersonCommand
+
+ListTimePersonCommand --> ListTimeCommandParser: l
+deactivate ListTimePersonCommand
+
+ListTimeCommandParser --> AddressBookParser: l
+deactivate ListTimeCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+ListTimeCommandParser -[hidden]-> AddressBookParser
+destroy ListTimeCommandParser
+
+AddressBookParser --> LogicManager: l
+deactivate AddressBookParser
+
+LogicManager -> ListTimePersonCommand: execute()
+activate ListTimePersonCommand
+
+ListTimePersonCommand -> Model: getTimeFromPerson(personName)
+activate Model
+
+Model --> ListTimePersonCommand
+deactivate Model
+
+create CommandResult
+ListTimePersonCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> ListTimePersonCommand
+deactivate CommandResult
+
+ListTimePersonCommand --> LogicManager: result
+deactivate ListTimePersonCommand
+
+ListTimePersonCommand -[hidden]->AddressBookParser
+destroy ListTimePersonCommand
+
+[<-- LogicManager
+deactivate LogicManager
+
+@enduml

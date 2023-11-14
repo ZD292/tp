@@ -1,0 +1,74 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AddTimeCommandParser" as AddTimeCommandParser LOGIC_COLOR
+participant "a:AddTimeCommand" as AddTimeCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(addtime n/Alex Yeoh ...)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(addtime n/Alex Yeoh ...)
+activate AddressBookParser
+
+create AddTimeCommandParser
+AddressBookParser -> AddTimeCommandParser
+activate AddTimeCommandParser
+
+AddTimeCommandParser --> AddressBookParser
+deactivate AddTimeCommandParser
+
+AddressBookParser -> AddTimeCommandParser : parse(n/Alex Yeoh t/mon 1200 - ...)
+activate AddTimeCommandParser
+
+Create AddTimeCommand
+AddTimeCommandParser -> AddTimeCommand
+activate AddTimeCommand
+
+AddTimeCommand --> AddTimeCommandParser : a
+deactivate AddTimeCommand
+
+AddTimeCommandParser --> AddressBookParser : a
+deactivate AddTimeCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.'
+AddTimeCommandParser -[hidden]-> AddressBookParser
+destroy AddTimeCommandParser
+
+AddressBookParser --> LogicManager : a
+deactivate AddressBookParser
+
+LogicManager -> AddTimeCommand : execute()
+activate AddTimeCommand
+
+AddTimeCommand -> Model : addTimeToPerson(args)
+activate Model
+
+Model --> AddTimeCommand
+deactivate Model
+
+create CommandResult
+AddTimeCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> AddTimeCommand
+deactivate CommandResult
+
+AddTimeCommand --> LogicManager : result
+deactivate AddTimeCommand
+
+AddTimeCommand -[hidden]-> AddressBookParser
+destroy AddTimeCommand
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml
